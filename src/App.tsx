@@ -57,7 +57,6 @@ export default function App() {
   const [renameValue, setRenameValue] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversationCursor, setConversationCursor] = useState<string | null>(null);
-  const [models, setModels] = useState<string[]>([]);
   const [selectedModel, setSelectedModel] = useState('llama-3.3-70b-versatile');
   const [webSearch, setWebSearch] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
@@ -120,7 +119,6 @@ export default function App() {
         const next = chatModels.length
           ? chatModels
           : [pickDefaultChatModel([])];
-        setModels(next);
         setSelectedModel((current) =>
           next.includes(current) ? current : pickDefaultChatModel(next),
         );
@@ -645,21 +643,13 @@ export default function App() {
             <img src={LOGO_SRC} alt="Quantum AI" />
             <div>
               <h2>{activeTitle}</h2>
-              <p>
-                <span className="status-dot" />
-                Groq ·{' '}
-                <select
-                  className="model-select"
-                  value={selectedModel}
-                  onChange={(event) => setSelectedModel(event.target.value)}
-                  aria-label="AI model"
-                >
-                  {models.length ? models.map((model) => <option key={model}>{model}</option>) : <option>default</option>}
-                </select>
-                {attachedDocs.length > 0 && ` · ${attachedDocs.length} document(s) attached`}
-                {webSearch && ' · live search'}
-                {loading && ' · generating…'}
-              </p>
+              {(attachedDocs.length > 0 || webSearch || loading) && (
+                <p>
+                  {attachedDocs.length > 0 && `${attachedDocs.length} document(s) attached`}
+                  {webSearch && `${attachedDocs.length > 0 ? ' · ' : ''}live search`}
+                  {loading && `${attachedDocs.length > 0 || webSearch ? ' · ' : ''}generating…`}
+                </p>
+              )}
             </div>
           </div>
           <div className="chat-header-actions">
