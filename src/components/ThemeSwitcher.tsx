@@ -1,4 +1,3 @@
-import type { CSSProperties } from 'react';
 import { useTheme } from '../context/ThemeContext';
 import type { ThemeId } from '../themes';
 
