@@ -248,7 +248,7 @@ export function ChatInput({
         </p>
       )}
 
-      <div className="input-box">
+      <div className="qa-input-pill">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -257,11 +257,10 @@ export function ChatInput({
               ? 'Listening… speak clearly'
               : webSearch
                 ? 'Ask with live Google, YouTube & Reddit search…'
-                : 'Ask Quantum AI anything…'
+                : 'Ask QuantumAI anything…'
           }
           value={value}
           onChange={(e) => {
-            // If user edits while listening, treat that as the new base and drop session finals.
             if (wantListeningRef.current) {
               baseTextRef.current = e.target.value;
               finalTranscriptRef.current = '';
@@ -272,65 +271,89 @@ export function ChatInput({
           disabled={disabled && !loading}
           aria-label="Prompt"
         />
-        <div className="input-actions">
+        <div className="qa-input-actions">
           <button
             type="button"
-            className="icon-btn"
+            className="qa-input-btn attach"
             onClick={() => fileRef.current?.click()}
             title="Upload documents"
             disabled={loading}
           >
-            📎
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48" />
+            </svg>
           </button>
           <button
             type="button"
-            className="icon-btn"
+            className="qa-input-btn attach"
             onClick={() => setCameraOpen(true)}
             title="Take a photo"
             disabled={loading}
             aria-label="Take a photo"
           >
-            📷
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z" />
+              <circle cx="12" cy="13" r="3" />
+            </svg>
           </button>
           {onWebSearchChange && (
             <button
               type="button"
-              className={`icon-btn ${webSearch ? 'search-active' : ''}`}
+              className={`qa-input-btn attach ${webSearch ? 'search-active' : ''}`}
               onClick={() => onWebSearchChange(!webSearch)}
               title={webSearch ? 'Live search on' : 'Search Google, YouTube & Reddit'}
               disabled={loading}
               aria-pressed={webSearch}
               aria-label="Toggle live web search"
             >
-              🔍
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8" />
+                <path d="m21 21-4.3-4.3" />
+              </svg>
             </button>
           )}
           {voiceSupported && (
             <button
               type="button"
-              className={`icon-btn ${listening ? 'listening' : ''}`}
+              className={`qa-input-btn attach ${listening ? 'listening' : ''}`}
               onClick={toggleVoice}
               title={listening ? 'Stop voice typing' : 'Voice typing'}
               aria-pressed={listening}
               aria-label={listening ? 'Stop voice typing' : 'Start voice typing'}
               disabled={loading}
             >
-              {listening ? '⏹' : '🎤'}
+              {listening ? (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="6" y="4" width="4" height="16" />
+                  <rect x="14" y="4" width="4" height="16" />
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z" />
+                  <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                </svg>
+              )}
             </button>
           )}
           {loading ? (
-            <button type="button" className="icon-btn stop" onClick={onStop} title="Stop generation">
-              ■
+            <button type="button" className="qa-input-btn attach stop" onClick={onStop} title="Stop generation">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                <rect x="6" y="6" width="12" height="12" rx="2" />
+              </svg>
             </button>
           ) : (
             <button
               type="button"
-              className="icon-btn send"
+              className="qa-input-btn send"
               onClick={onSend}
               disabled={disabled || !value.trim()}
               title="Send message"
             >
-              ➤
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="22" y1="2" x2="11" y2="13" />
+                <polygon points="22 2 15 22 11 13 2 9 22 2" />
+              </svg>
             </button>
           )}
         </div>

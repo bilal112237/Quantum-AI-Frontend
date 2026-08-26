@@ -111,13 +111,13 @@ export function MessageBubble({
     const text = message.content ?? '';
     const ext =
       format === 'markdown' ? 'md' :
-      format === 'word' ? 'docx' :
-      format === 'pdf' ? 'pdf' :
-      'txt';
+        format === 'word' ? 'docx' :
+          format === 'pdf' ? 'pdf' :
+            'txt';
     const mime =
       format === 'markdown' ? 'text/markdown' :
-      format === 'text' ? 'text/plain' :
-      'application/octet-stream';
+        format === 'text' ? 'text/plain' :
+          'application/octet-stream';
     const filename = `answer.${ext}`;
     const blob = new Blob([text], { type: `${mime};charset=utf-8` });
     const url = URL.createObjectURL(blob);
@@ -248,30 +248,14 @@ export function MessageBubble({
             <button
               type="button"
               onClick={() => onDownload?.(message)}
-              style={{
-                padding: '6px 12px',
-                background: '#2563EB',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
+              className="msg-action-btn msg-action-btn--primary"
             >
               ⬇ Download
             </button>
             <button
               type="button"
               onClick={() => onRequestChanges?.(message)}
-              style={{
-                padding: '6px 12px',
-                background: '#7c3aed',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
-                fontSize: '14px',
-              }}
+              className="msg-action-btn msg-action-btn--secondary"
             >
               ✏️ Request Changes
             </button>

@@ -18,6 +18,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
 export function ThemeProvider({ children }: { children: ReactNode }) {
   const [theme, setThemeState] = useState<ThemeId>(() => readStoredTheme());
 
+  
   useEffect(() => {
     applyThemeToDocument(theme);
     writeStoredTheme(theme);

@@ -63,7 +63,7 @@ export default function App() {
   const shouldAutoScrollRef = useRef(true);
   const abortRef = useRef<AbortController | null>(null);
   const [lastPresentationMsg, setLastPresentationMsg] = useState<ChatMessage | null>(null);
-  
+
 
   const activeConversation = conversations.find((c) => c._id === activeConversationId);
   const activeTitle = activeConversation?.title ?? 'New conversation';
@@ -321,8 +321,8 @@ export default function App() {
     const sdkFormat =
       format === 'word' ? 'docx'
         : format === 'markdown' ? 'md'
-        : format === 'text' ? 'txt'
-        : 'pdf';
+          : format === 'text' ? 'txt'
+            : 'pdf';
 
     const sourceFormat = format === 'text' ? 'txt' : 'md';
     const fileName = sourceFormat === 'md' ? 'answer.md' : 'answer.txt';
@@ -341,28 +341,28 @@ export default function App() {
         },
       });
 
-    const ext =
-      format === 'word' ? 'docx'
-        : format === 'markdown' ? 'md'
-        : format === 'text' ? 'txt'
-        : 'pdf';
+      const ext =
+        format === 'word' ? 'docx'
+          : format === 'markdown' ? 'md'
+            : format === 'text' ? 'txt'
+              : 'pdf';
 
-    const downloadName = `answer.${ext}`;
+      const downloadName = `answer.${ext}`;
 
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = downloadName;
-    a.click();
-    URL.revokeObjectURL(url);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = downloadName;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch (err) {
       console.error('FormatConvert failed', err);
 
       const fallbackName =
         format === 'word' ? 'answer.docx'
           : format === 'markdown' ? 'answer.md'
-          : format === 'text' ? 'answer.txt'
-          : 'answer.pdf';
+            : format === 'text' ? 'answer.txt'
+              : 'answer.pdf';
 
       const fallbackBlob = new Blob([text], { type: 'text/plain;charset=utf-8' });
       const fallbackUrl = URL.createObjectURL(fallbackBlob);
@@ -580,40 +580,40 @@ export default function App() {
             documents.map((doc) => {
               const inChat = attachedDocs.some((d) => d._id === doc._id);
               return (
-              <div
-                key={doc._id}
-                className={`list-item ${inChat ? 'active' : ''}`}
-                role="button"
-                tabIndex={0}
-                title={inChat ? 'Remove from chat context' : 'Use this document in chat'}
-                onClick={() => toggleDocumentInChat(doc)}
-                onKeyDown={(e) => e.key === 'Enter' && toggleDocumentInChat(doc)}
-              >
-                <span className="list-item-title">📄 {doc.originalName}</span>
-                <span className="list-item-meta">
-                  {(doc.wordCount ?? 0).toLocaleString()} words
-                  {doc.pageCount ? ` · ${doc.pageCount} pages` : ''}
-                  {inChat ? ' · in chat' : ''}
-                  {' · '}
-                  <span
-                    role="button"
-                    tabIndex={0}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDeleteDocument(doc._id);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
+                <div
+                  key={doc._id}
+                  className={`list-item ${inChat ? 'active' : ''}`}
+                  role="button"
+                  tabIndex={0}
+                  title={inChat ? 'Remove from chat context' : 'Use this document in chat'}
+                  onClick={() => toggleDocumentInChat(doc)}
+                  onKeyDown={(e) => e.key === 'Enter' && toggleDocumentInChat(doc)}
+                >
+                  <span className="list-item-title">📄 {doc.originalName}</span>
+                  <span className="list-item-meta">
+                    {(doc.wordCount ?? 0).toLocaleString()} words
+                    {doc.pageCount ? ` · ${doc.pageCount} pages` : ''}
+                    {inChat ? ' · in chat' : ''}
+                    {' · '}
+                    <span
+                      role="button"
+                      tabIndex={0}
+                      onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteDocument(doc._id);
-                      }
-                    }}
-                    style={{ color: '#f87171', cursor: 'pointer' }}
-                  >
-                    Delete
+                      }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          e.stopPropagation();
+                          handleDeleteDocument(doc._id);
+                        }
+                      }}
+                      style={{ color: '#f87171', cursor: 'pointer' }}
+                    >
+                      Delete
+                    </span>
                   </span>
-                </span>
-              </div>
+                </div>
               );
             })
           )}
@@ -662,15 +662,18 @@ export default function App() {
         <div className="chat-thread" ref={threadRef}>
           {messages.length === 0 ? (
             <div className="empty-state">
-              <img src="/logo.png" alt="Quantum AI" className="brand-logo-lg" />
-              <h3>How can I help you today?</h3>
-              <p>
-                Upload a document, then ask in plain language — Quantum AI picks the right format
-                (Markdown for a README, quiz, summary, slides, and more).
-              </p>
-              <div className="suggestion-grid">
+              <div className="qa-hero">
+                <div className="qa-hero-content">
+                  <div className="qa-hero-greeting">Welcome back</div>
+                  <h3>What will you explore today?</h3>
+                  <p>
+                    Upload documents, ask questions, or pick a suggestion below to get started.
+                  </p>
+                </div>
+              </div>
+              <div className="qa-chips">
                 {SUGGESTIONS.map((s) => (
-                  <button key={s} type="button" className="suggestion" onClick={() => handleSend(s)}>
+                  <button key={s} type="button" className="qa-chip" onClick={() => handleSend(s)}>
                     {s}
                   </button>
                 ))}
@@ -726,7 +729,7 @@ export default function App() {
       </main>
     </div>
   );
-  
+
 }
 
 
