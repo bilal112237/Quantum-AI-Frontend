@@ -6,36 +6,42 @@ export const THEMES = [
     label: 'Aurora',
     description: 'Deep cosmic purple',
     swatch: ['#0f0f1a', '#8b5cf6', '#f8f7fc'],
+    logo: '/logo-aurora.png',           // add
   },
   {
     id: 'graphite',
     label: 'Graphite',
     description: 'Refined charcoal + electric blue',
     swatch: ['#18181b', '#3b82f6', '#f2f4f7'],
+    logo: '/logo-graphite.png',           // add
   },
   {
     id: 'meadow',
     label: 'Meadow',
     description: 'Sophisticated forest + mint',
     swatch: ['#0f1f17', '#34d399', '#f0fdf4'],
+    logo: '/logo-meadow.png',           // add
   },
   {
     id: 'ember',
     label: 'Ember',
     description: 'Warm copper + amber glow',
     swatch: ['#1a100f', '#f97316', '#fff7ed'],
+    logo: '/logo-ember.png',           // add
   },
   {
     id: 'midnight',
     label: 'Midnight',
     description: 'Deep navy + cyan pulse',
     swatch: ['#0a1628', '#06b6d4', '#ecfeff'],
+    logo: '/logo-midnight.png',           // add
   },
   {
     id: 'pearl',
     label: 'Pearl',
     description: 'Clean light + soft teal',
     swatch: ['#f8fafc', '#14b8a6', '#0f172a'],
+    logo: '/logo-pearl.png',           // add
   },
 ] as const;
 

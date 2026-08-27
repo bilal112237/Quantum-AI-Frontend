@@ -22,10 +22,7 @@ import {
 import { useAuthSession } from './components/LoginGate';
 import type { ChatMessage, Conversation, DocumentItem } from './types';
 import { filterChatModels, pickDefaultChatModel } from './utils/chatModels';
-
-
-
-const LOGO_SRC = '/logo.png';
+import { useTheme } from './context/ThemeContext';
 
 const SUGGESTIONS = [
   'Explain quantum computing in simple terms',
@@ -41,6 +38,9 @@ type ChatFilter = 'all' | 'archived';
 
 export default function App() {
   const { logout } = useAuthSession();
+  const { theme, themes } = useTheme();
+  const logoSrc = themes.find((t) => t.id === theme)?.logo ?? '/logo.png';
+
   const [tab, setTab] = useState<SidebarTab>('chats');
   const [chatFilter, setChatFilter] = useState<ChatFilter>('all');
   const [search, setSearch] = useState('');
@@ -57,7 +57,7 @@ export default function App() {
   const [renameValue, setRenameValue] = useState('');
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [conversationCursor, setConversationCursor] = useState<string | null>(null);
-  const [selectedModel, setSelectedModel] = useState('llama-3.3-70b-versatile');
+  const [selectedModel, setSelectedModel] = useState('openai/gpt-oss-120b');
   const [webSearch, setWebSearch] = useState(false);
   const threadRef = useRef<HTMLDivElement>(null);
   const shouldAutoScrollRef = useRef(true);
@@ -440,7 +440,7 @@ export default function App() {
       <aside className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
         <div className="sidebar-header">
           <div className="brand">
-            <img src={LOGO_SRC} alt="Quantum AI" className="brand-logo" />
+            <img src={logoSrc} alt="Quantum AI" className="brand-logo" />
             <div>
               <h1>Quantum AI</h1>
               <p>Powered by Groq</p>
@@ -621,7 +621,18 @@ export default function App() {
 
         <div className="sidebar-footer">
           <p className="sidebar-status">
-            {online ? '● API connected' : '○ API offline — start backend on port 5001'}
+            <span
+              className="status-dot"
+              style={
+                !online
+                  ? {
+                    background: 'var(--danger)',
+                    boxShadow: '0 0 0 3px color-mix(in srgb, var(--danger) 25%, transparent)',
+                  }
+                  : undefined
+              }
+            />
+            {online ? 'API connected' : 'API offline — start backend on port 5001'}
           </p>
           <button type="button" className="btn btn-logout" onClick={logout}>
             Log out
@@ -640,7 +651,7 @@ export default function App() {
             ☰
           </button>
           <div className="chat-header-brand">
-            <img src={LOGO_SRC} alt="Quantum AI" />
+            <img src={logoSrc} alt="Quantum AI" />
             <div>
               <h2>{activeTitle}</h2>
               {(attachedDocs.length > 0 || webSearch || loading) && (

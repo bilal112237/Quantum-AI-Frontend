@@ -257,7 +257,7 @@ export function ChatInput({
               ? 'Listening… speak clearly'
               : webSearch
                 ? 'Ask with live Google, YouTube & Reddit search…'
-                : 'Ask QuantumAI anything…'
+                : 'Ask Quantum AI anything…'
           }
           value={value}
           onChange={(e) => {

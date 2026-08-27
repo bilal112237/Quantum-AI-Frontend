@@ -33,6 +33,7 @@
   --accent-soft: #ede9fe;
   --accent-text: #5b21b6;
   --accent-2: #3b82f6;
+  --accent-glow: rgba(139, 92, 246, 0.15);
   --danger: #ef4444;
   --danger-bg: #fef2f2;
   --danger-border: #fecaca;
@@ -87,6 +88,7 @@
   --accent-soft: #dbeafe;
   --accent-text: #1d4ed8;
   --accent-2: #60a5fa;
+  --accent-glow: rgba(59, 130, 246, 0.15);
   --danger: #ef4444;
   --danger-bg: #fef2f2;
   --danger-border: #fecaca;
@@ -135,6 +137,7 @@
   --accent-soft: #d1fae5;
   --accent-text: #065f46;
   --accent-2: #6ee7b7;
+  --accent-glow: rgba(52, 211, 153, 0.15);
   --danger: #ef4444;
   --danger-bg: #fef2f2;
   --danger-border: #fecaca;
@@ -1987,6 +1990,13 @@ button {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 0.65rem;
+}
+
+.theme-swatch-logo {
+  width: 62%;
+  height: 62%;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
 }
 
 .theme-switcher--dialog .theme-swatch {

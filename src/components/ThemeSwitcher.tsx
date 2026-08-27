@@ -18,7 +18,7 @@ export function ThemeSwitcher({ variant = 'inline', onSelect }: ThemeSwitcherPro
       <div className="theme-swatch-row">
         {themes.map((item) => {
           const active = theme === item.id;
-          const [bg, accent, text] = item.swatch;
+          const [bg, accent] = item.swatch;
           return (
             <button
               key={item.id}
@@ -38,12 +38,7 @@ export function ThemeSwitcher({ variant = 'inline', onSelect }: ThemeSwitcherPro
                   background: `linear-gradient(135deg, ${bg} 0%, ${accent} 100%)`,
                 }}
               >
-                <span
-                  className="theme-swatch-dot"
-                  style={{ background: accent, color: text }}
-                >
-                  Q
-                </span>
+                <img src={item.logo} alt="" className="theme-swatch-logo" />
               </div>
               <span className="theme-swatch-name">{item.label}</span>
               {variant === 'dialog' ? (

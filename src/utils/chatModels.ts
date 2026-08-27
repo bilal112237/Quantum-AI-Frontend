@@ -19,11 +19,11 @@ const NON_CHAT_PATTERNS = [
 
 /** Preferred order for the chat model picker (first match wins for default). */
 export const PREFERRED_CHAT_MODELS = [
-  'llama-3.3-70b-versatile',
-  'qwen/qwen3.6-27b',
   'openai/gpt-oss-120b',
+  'qwen/qwen3.6-27b',
   'openai/gpt-oss-20b',
   'llama-3.1-8b-instant',
+  'llama-3.3-70b-versatile',
   'groq/compound',
   'groq/compound-mini',
   'allam-2-7b',
@@ -50,7 +50,7 @@ export function filterChatModels(modelIds: string[]): string[] {
   return chat;
 }
 
-export function pickDefaultChatModel(available: string[], fallback = 'llama-3.3-70b-versatile'): string {
+export function pickDefaultChatModel(available: string[], fallback = 'openai/gpt-oss-120b'): string {
   for (const preferred of PREFERRED_CHAT_MODELS) {
     if (available.includes(preferred)) return preferred;
   }
