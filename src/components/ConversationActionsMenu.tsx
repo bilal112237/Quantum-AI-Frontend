@@ -6,6 +6,7 @@ type Props = {
   onPin: (e: React.MouseEvent) => void;
   onRename: () => void;
   onArchive: (e: React.MouseEvent) => void;
+    onExport: () => void;
   onDelete: () => void;
 };
 
@@ -14,6 +15,7 @@ export function ConversationActionsMenu({
   onPin,
   onRename,
   onArchive,
+  onExport,
   onDelete,
 }: Props) {
   const [open, setOpen] = useState(false);
@@ -94,6 +96,17 @@ export function ConversationActionsMenu({
             }}
           >
             {conversation.archived ? 'Unarchive' : 'Archive'}
+          </button>
+                    <button
+            type="button"
+            role="menuitem"
+            onClick={(e) => {
+              e.stopPropagation();
+              setOpen(false);
+              onExport();
+            }}
+          >
+            Export as Markdown
           </button>
           <hr />
           <button

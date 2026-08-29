@@ -18,6 +18,7 @@ import {
   streamChat,
   uploadDocuments,
   listModels,
+  downloadConversationExport
 } from './api/client';
 import { useAuthSession } from './components/LoginGate';
 import type { ChatMessage, Conversation, DocumentItem } from './types';
@@ -34,9 +35,8 @@ const SUGGESTIONS = [
 type SidebarTab = 'chats' | 'documents';
 type ChatFilter = 'all' | 'archived';
 
-
-
 export default function App() {
+
   const { logout } = useAuthSession();
   const { theme, themes } = useTheme();
   const logoSrc = themes.find((t) => t.id === theme)?.logo ?? '/logo.png';
@@ -67,6 +67,10 @@ export default function App() {
 
   const activeConversation = conversations.find((c) => c._id === activeConversationId);
   const activeTitle = activeConversation?.title ?? 'New conversation';
+
+  // add near your other useState declarations
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
 
   const loadConversations = useCallback(async (q?: string, filter: ChatFilter = chatFilter) => {
     try {
@@ -108,9 +112,14 @@ export default function App() {
   }, []);
 
   useEffect(() => {
-    loadConversations(search, chatFilter);
+    const timer = setTimeout(() => setDebouncedSearch(search), 300);
+    return () => clearTimeout(timer);
+  }, [search]);
+
+  useEffect(() => {
+    loadConversations(debouncedSearch, chatFilter);
     loadDocuments();
-  }, [loadConversations, loadDocuments, search, chatFilter]);
+  }, [loadConversations, loadDocuments, debouncedSearch, chatFilter]);
 
   useEffect(() => {
     listModels()
@@ -561,6 +570,7 @@ export default function App() {
                         setRenameValue(conv.title);
                       }}
                       onArchive={(e) => handleArchive(conv, e)}
+                      onExport={() => downloadConversationExport(conv._id, conv.title)}
                       onDelete={() => handleDeleteConversation(conv._id)}
                     />
                   </div>
@@ -668,61 +678,69 @@ export default function App() {
           </div>
         </header>
 
-        {error && <div className="error-banner">{error}</div>}
-
-        <div className="chat-thread" ref={threadRef}>
-          {messages.length === 0 ? (
-            <div className="empty-state">
-              <div className="qa-hero">
-                <div className="qa-hero-content">
-                  <div className="qa-hero-greeting">Welcome back</div>
-                  <h3>What will you explore today?</h3>
-                  <p>
-                    Upload documents, ask questions, or pick a suggestion below to get started.
-                  </p>
+        {error && <div className="error-banner" role="alert">{error}</div>}
+        <>
+          <div className="chat-thread" ref={threadRef}>
+            {messages.length === 0 ? (
+              <div className="empty-state">
+                <div className="qa-hero">
+                  <div className="qa-hero-content">
+                    <div className="qa-hero-greeting">Welcome back</div>
+                    <h3>What will you explore today?</h3>
+                    <p>
+                      Upload documents, ask questions, or pick a suggestion below to get started.
+                    </p>
+                  </div>
+                </div>
+                <div className="qa-chips">
+                  {SUGGESTIONS.map((s) => (
+                    <button key={s} type="button" className="qa-chip" onClick={() => handleSend(s)}>
+                      {s}
+                    </button>
+                  ))}
                 </div>
               </div>
-              <div className="qa-chips">
-                {SUGGESTIONS.map((s) => (
-                  <button key={s} type="button" className="qa-chip" onClick={() => handleSend(s)}>
-                    {s}
-                  </button>
-                ))}
-              </div>
-            </div>
-          ) : (
-            messages.map((m, idx) => (
-              <div key={m.id} className="message-with-search">
-                {m.role === 'assistant' && m.searchResults && (
-                  <SearchResultsCard payload={m.searchResults} />
-                )}
-                <MessageBubble
-                  message={m}
-                  streaming={loading && idx === lastAssistantIndex && m.role === 'assistant'}
-                  isLastAssistant={idx === lastAssistantIndex && m.role === 'assistant'}
-                  isLastUser={idx === lastUserIndex && m.role === 'user'}
-                  onRegenerate={
-                    idx === lastAssistantIndex && m.role === 'assistant' && !loading
-                      ? handleRegenerate
-                      : undefined
-                  }
-                  onRetry={
-                    idx === lastAssistantIndex && m.role === 'assistant' && !loading
-                      ? handleRetry
-                      : undefined
-                  }
-                  onEdit={
-                    idx === lastUserIndex && m.role === 'user' && !loading
-                      ? () => handleEditPrompt(m)
-                      : undefined
-                  }
-                  onDownload={m.role === 'assistant' ? handleDownloadPresentation : undefined}
-                  onRequestChanges={m.downloadable ? handleRequestPresentationChanges : undefined}
-                />
-              </div>
-            ))
-          )}
-        </div>
+            ) : (
+              messages.map((m, idx) => (
+                <div key={m.id} className="message-with-search">
+                  {m.role === 'assistant' && m.searchResults && (
+                    <SearchResultsCard payload={m.searchResults} />
+                  )}
+                  <MessageBubble
+                    message={m}
+                    streaming={loading && idx === lastAssistantIndex && m.role === 'assistant'}
+                    isLastAssistant={idx === lastAssistantIndex && m.role === 'assistant'}
+                    isLastUser={idx === lastUserIndex && m.role === 'user'}
+                    onRegenerate={
+                      idx === lastAssistantIndex && m.role === 'assistant' && !loading
+                        ? handleRegenerate
+                        : undefined
+                    }
+                    onRetry={
+                      idx === lastAssistantIndex && m.role === 'assistant' && !loading
+                        ? handleRetry
+                        : undefined
+                    }
+                    onEdit={
+                      idx === lastUserIndex && m.role === 'user' && !loading
+                        ? () => handleEditPrompt(m)
+                        : undefined
+                    }
+                    onDownload={m.role === 'assistant' ? handleDownloadPresentation : undefined}
+                    onRequestChanges={m.downloadable ? handleRequestPresentationChanges : undefined}
+                  />
+                </div>
+              ))
+            )}
+          </div>
+          <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+            {loading
+              ? 'Quantum AI is responding'
+              : messages[lastAssistantIndex]?.role === 'assistant'
+                ? 'Quantum AI has replied'
+                : ''}
+          </div>
+        </>
 
         <ChatInput
           value={input}

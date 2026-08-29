@@ -277,6 +277,22 @@ export async function downloadPresentation(
   return { blob, filename };
 }
 
+export async function downloadConversationExport(id: string, title: string) {
+  const res = await fetch(`${API_BASE}/conversations/${id}/export`, {
+    headers: authHeaders(),
+  });
+  if (!res.ok) throw new Error('Export failed');
+  const blob = await res.blob();
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `${(title || 'conversation').replace(/[^a-z0-9]+/gi, '-')}.md`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+}
+
 export async function downloadDocumentConversion(id: string, format: 'txt' | 'markdown') {
   const res = await fetch(`${API_BASE}/documents/${id}/download/${format}`, {
     headers: authHeaders(),
